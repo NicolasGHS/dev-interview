@@ -7,7 +7,7 @@ import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import { route } from 'ziggy-js';
 
-const product: Product = ref(null);
+const product = ref<Product | null>(null);
 
 
 const breadcrumbs: BreadcrumbItem[] = [
