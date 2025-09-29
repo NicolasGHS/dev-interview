@@ -2,12 +2,14 @@
 import { Product, type BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
-import axios from 'axios';
-import { route } from 'ziggy-js';
+import { Head, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { type PageProps as InertiaPageProps } from '@inertiajs/core';
 
-const product = ref<Product | null>(null);
+interface PageProps extends InertiaPageProps {
+  product: Product;
+}
+
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -17,17 +19,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const getProduct = async () => {
-    try {
-        const result = await axios.get(route("product.getById", { id: 1 }));
-        console.log("product:", result.data.data);
-        product.value = result.data.data;
-    } catch (error) {
-        console.error("Failed to fetch product: ", error); 
-    }
-}
+const page = usePage<PageProps>();
+const product = computed(() => page.props.product);
 
-onMounted(getProduct);
 </script>
 
 <template>
