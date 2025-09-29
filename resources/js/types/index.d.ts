@@ -36,4 +36,28 @@ export interface User {
     updated_at: string;
 }
 
+export interface Product {
+    id: number;
+    name: string;
+    description: string | null;
+    price: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Pagination {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number | null;
+    to: number | null;
+    has_more_pages: boolean;
+}
+
+export interface ProductsResponse {
+    data: Product[];
+    pagination: Pagination;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
