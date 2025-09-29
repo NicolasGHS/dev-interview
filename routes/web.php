@@ -11,11 +11,10 @@ Route::get('/', function () {
 
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-// Product routes
-Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
-
 // API route for products
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/api/products', [ProductController::class, 'getProductsPaginated'])->name('api.products');
+Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name('product.getById');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

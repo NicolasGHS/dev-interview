@@ -10,6 +10,18 @@ use Inertia\Response;
 class ProductController extends Controller
 {
     /**
+     * Display the specified product.
+     */
+    public function show(int $id): Response
+    {
+        $product = Product::findOrFail($id);
+
+        return Inertia::render('Product', [
+            'product' => $product,
+        ]);
+    }
+
+    /**
      * Display a paginated listing of products.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -36,15 +48,14 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified product.
-     */
-    public function show(int $id): Response
+    public function getProductById(int $id)
     {
         $product = Product::findOrFail($id);
 
-        return Inertia::render('Product', [
-            'product' => $product,
-        ]);
+        return response()->json(
+            [
+                'data' => $product,
+            ],
+        );
     }
 }
