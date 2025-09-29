@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type ProductsResponse } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 
 interface Props {
     products: ProductsResponse;
@@ -19,6 +19,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const formatPrice = (price: string): string => {
     return `$${parseFloat(price).toFixed(2)}`;
+};
+
+const navigateToProduct = (productId: number): void => {
+    router.visit(`/product/${productId}`);
 };
 </script>
 
@@ -43,7 +47,8 @@ const formatPrice = (price: string): string => {
                     <div 
                         v-for="product in props.products.data" 
                         :key="product.id"
-                        class="rounded-lg border p-4 shadow-sm hover:shadow-md transition-shadow"
+                        @click="navigateToProduct(product.id)"
+                        class="rounded-lg border p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:bg-slate-50"
                     >
                         <div class="space-y-2">
                             <h3 class="font-semibold text-lg">{{ product.name }}</h3>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
@@ -31,6 +33,18 @@ class ProductController extends Controller
                 'to' => $products->lastItem(),
                 'has_more_pages' => $products->hasMorePages(),
             ],
+        ]);
+    }
+
+    /**
+     * Display the specified product.
+     */
+    public function show(int $id): Response
+    {
+        $product = Product::findOrFail($id);
+
+        return Inertia::render('Product', [
+            'product' => $product,
         ]);
     }
 }

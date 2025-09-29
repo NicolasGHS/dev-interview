@@ -11,6 +11,9 @@ Route::get('/', function () {
 
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
+// Product routes
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+
 // API route for products
 Route::get('/api/products', [ProductController::class, 'getProductsPaginated'])->name('api.products');
 
