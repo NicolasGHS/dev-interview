@@ -13,6 +13,7 @@ Route::get('/basket', function () {
 })->name('basket');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard-navbar', [DashboardController::class, 'indexNavbar'])->middleware(['auth', 'verified'])->name('dashboard.navbar');
 
 // API route for products
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');

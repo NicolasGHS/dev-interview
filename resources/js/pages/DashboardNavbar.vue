@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem, type ProductsResponse } from '@/types';
+import NavbarLayout from '@/layouts/NavbarLayout.vue';
+import { type ProductsResponse } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Pagination } from '@/components/ui/pagination';
 import ProductCard from '@/components/ProductCard.vue';
@@ -12,15 +11,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
-];
-
 const handlePageChange = (page: number): void => {
-    router.visit(`/dashboard?page=${page}`, {
+    router.visit(`/dashboard-navbar?page=${page}`, {
         preserveState: true,
         preserveScroll: true,
     });
@@ -28,12 +20,10 @@ const handlePageChange = (page: number): void => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Dashboard with Navbar" />
 
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div
-            class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-        >
+    <NavbarLayout class="container mx-auto px-4 py-6">
+        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
             <div class="grid auto-rows-min gap-4">
                 <div class="flex items-center justify-between">
                     <h1 class="text-2xl font-bold">Products</h1>
@@ -48,7 +38,7 @@ const handlePageChange = (page: number): void => {
                     <div 
                         v-for="product in props.products.data" 
                         :key="product.id"
-                        class="shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                        class="rounded-lg border p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:bg-slate-50"
                     >
                         <ProductCard :product="product" />
                     </div>
@@ -78,5 +68,5 @@ const handlePageChange = (page: number): void => {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </NavbarLayout>
 </template>

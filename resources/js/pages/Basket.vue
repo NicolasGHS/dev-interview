@@ -1,5 +1,12 @@
+<script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+
+</script>
+
 <template>
-    <div>
-        <h1>Basket</h1>
-    </div>
+    <AppLayout>
+        <div>
+            <h1>Basket</h1>
+        </div>
+    </AppLayout>
 </template>
