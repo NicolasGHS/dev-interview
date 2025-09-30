@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type ProductsResponse } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
+import { Pagination } from '@/components/ui/pagination';
 
 interface Props {
     products: ProductsResponse;
@@ -23,6 +24,13 @@ const formatPrice = (price: string): string => {
 
 const navigateToProduct = (productId: number): void => {
     router.visit(`/product/${productId}`);
+};
+
+const handlePageChange = (page: number): void => {
+    router.visit(`/dashboard?page=${page}`, {
+        preserveState: true,
+        preserveScroll: true,
+    });
 };
 </script>
 
@@ -67,13 +75,21 @@ const navigateToProduct = (productId: number): void => {
                     </div>
                 </div>
 
+                <!-- Pagination Component -->
+                <div v-if="props.products.pagination.last_page > 1" class="mt-6 flex justify-center">
+                    <Pagination
+                        :current-page="props.products.pagination.current_page"
+                        :total-pages="props.products.pagination.last_page"
+                        @page-change="handlePageChange"
+                    />
+                </div>
+
                 <!-- Pagination Info -->
-                <div v-if="props.products.pagination.total > 0" class="mt-6 text-center">
+                <div v-if="props.products.pagination.total > 0" class="mt-4 text-center">
                     <p class="text-sm text-muted-foreground">
-                        Page {{ props.products.pagination.current_page }} of {{ props.products.pagination.last_page }}
-                        <span v-if="props.products.pagination.has_more_pages">
-                            • More pages available
-                        </span>
+                        Showing {{ props.products.pagination.from || 0 }} - 
+                        {{ props.products.pagination.to || 0 }} of 
+                        {{ props.products.pagination.total }} products
                     </p>
                 </div>
 

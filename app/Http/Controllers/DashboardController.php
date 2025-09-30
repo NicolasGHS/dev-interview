@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -11,9 +12,12 @@ class DashboardController extends Controller
     /**
      * Display the dashboard with products.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $products = Product::latest()->paginate(10);
+        $page = $request->get('page', 1);
+        $perPage = $request->get('per_page', 10);
+        
+        $products = Product::latest()->paginate($perPage, ['*'], 'page', $page);
         
         return Inertia::render('Dashboard', [
             'products' => [
