@@ -16,9 +16,10 @@ const navigateToProduct = (productId: number): void => {
 </script>
 
 <template>
-    <Card class="h-48 flex flex-col justify-between space-y-2 p-4" @click="navigateToProduct(props.product.id)">
+    <Card class="h-72 flex flex-col justify-between space-y-2 p-4" @click="navigateToProduct(props.product.id)">
         <div class="flex-1 space-y-2">
             <h3 class="font-semibold text-lg">{{ props.product.name }}</h3>
+            <img src="/default_boardgame_image.avif" alt="{{ props.product.name }}" class="w-full h-24 object-cover rounded" />
             <p class="text-sm text-muted-foreground line-clamp-3">
                 {{ props.product.description }} 
             </p>
