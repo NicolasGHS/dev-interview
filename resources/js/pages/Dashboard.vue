@@ -4,6 +4,7 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type ProductsResponse } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Pagination } from '@/components/ui/pagination';
+import ProductCard from '@/components/ProductCard.vue';
 
 interface Props {
     products: ProductsResponse;
@@ -18,13 +19,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const formatPrice = (price: string): string => {
-    return `$${parseFloat(price).toFixed(2)}`;
-};
 
-const navigateToProduct = (productId: number): void => {
-    router.visit(`/product/${productId}`);
-};
+
 
 const handlePageChange = (page: number): void => {
     router.visit(`/dashboard?page=${page}`, {
@@ -55,23 +51,9 @@ const handlePageChange = (page: number): void => {
                     <div 
                         v-for="product in props.products.data" 
                         :key="product.id"
-                        @click="navigateToProduct(product.id)"
                         class="rounded-lg border p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:bg-slate-50"
                     >
-                        <div class="space-y-2">
-                            <h3 class="font-semibold text-lg">{{ product.name }}</h3>
-                            <p class="text-sm text-muted-foreground line-clamp-3">
-                                {{ product.description || 'No description available' }}
-                            </p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-2xl font-bold text-primary">
-                                    {{ formatPrice(product.price) }}
-                                </span>
-                                <span class="text-xs text-muted-foreground">
-                                    ID: {{ product.id }}
-                                </span>
-                            </div>
-                        </div>
+                        <ProductCard :product="product" />
                     </div>
                 </div>
 
