@@ -21,6 +21,7 @@ Route::get('/api/products', [ProductController::class, 'getProductsPaginated'])-
 Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name('product.getById');
 
 Route::post('/cart/add', [CardItemController::class, 'addCardItem'])->name('cart.add');
+Route::get('/cart', [CardItemController::class, 'getCartItems'])->name('cart.items');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
