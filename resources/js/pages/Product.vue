@@ -56,7 +56,7 @@ const product = computed(() => page.props.product);
 
           <!-- Action Buttons -->
           <div class="flex items-center gap-4 pt-6">
-            <AddCardButton />
+            <AddCardButton :id="product.id" />
             <SaveButton />  
           </div>
         </div>
