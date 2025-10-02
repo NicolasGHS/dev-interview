@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProductService;
+use App\Services\LikeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,11 +11,11 @@ use Inertia\Response;
 
 class LikeController extends Controller
 {
-    protected ProductService $productService;
+    protected LikeService $likeService;
 
-    public function __construct(ProductService $productService)
+    public function __construct(LikeService $likeService)
     {
-        $this->productService = $productService;
+        $this->likeService = $likeService;
     }
 
     /**
@@ -37,7 +37,7 @@ class LikeController extends Controller
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        $likedProducts = $this->productService->getLikedProducts($userId);
+        $likedProducts = $this->likeService->getLikedProducts($userId);
 
         return response()->json([
             'success' => true,
@@ -58,7 +58,7 @@ class LikeController extends Controller
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
-            $result = $this->productService->toggleLike($userId, $productId);
+            $result = $this->likeService->toggleLike($userId, $productId);
 
             return response()->json([
                 'success' => true,
@@ -88,7 +88,7 @@ class LikeController extends Controller
 
         $productIds = $request->input('product_ids', []);
 
-        $likedProductIds = $this->productService->checkUserLikes($userId, $productIds);
+        $likedProductIds = $this->likeService->checkUserLikes($userId, $productIds);
 
         return response()->json([
             'success' => true,

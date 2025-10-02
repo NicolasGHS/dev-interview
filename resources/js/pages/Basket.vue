@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import CartItem from '@/components/CartItem.vue';
 import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
+import CartOverview from '@/components/CartOverview.vue';
 
 // TODO: change any type
 const items = ref<any[]>([]);
@@ -55,17 +56,20 @@ onMounted(() => {
             <p v-if="cartCount" class="text-muted-foreground">
                 {{ cartCount }} item{{ cartCount !== 1 ? 's' : '' }} in your basket
             </p>
-            <div v-if="items.length > 0" class="space-y-4">
-                <CartItem 
-                    v-for="item in items" 
-                    :key="item.id"
-                    :item="item"
-                    @quantity-changed="handleQuantityChanged"
-                    @item-removed="handleItemRemoved"
-                />
-            </div>
-            <div v-else class="text-center py-8">
-                <p class="text-muted-foreground">Your basket is empty</p>
+            <div class="flex gap-8 justify-center">
+                <div v-if="items.length > 0" class="space-y-4">
+                    <CartItem 
+                        v-for="item in items" 
+                        :key="item.id"
+                        :item="item"
+                        @quantity-changed="handleQuantityChanged"
+                        @item-removed="handleItemRemoved"
+                    />
+                </div>
+                <div v-else class="text-center py-8">
+                    <p class="text-muted-foreground">Your basket is empty</p>
+                </div>
+                <CartOverview :items="items" />
             </div>
         </div>
     </AppLayout>
