@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import CartItem from '@/components/CartItem.vue';
 import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 
@@ -26,6 +27,21 @@ const getItems = async () => {
     }
 }
 
+const handleQuantityChanged = (updatedItem: any) => {
+    const index = items.value.findIndex(item => item.id === updatedItem.id);
+    if (index !== -1) {
+        items.value[index] = updatedItem;
+        // Recalculate cart count
+        cartCount.value = items.value.reduce((sum, item) => sum + item.quantity, 0);
+    }
+};
+
+const handleItemRemoved = (itemId: number) => {
+    items.value = items.value.filter(item => item.id !== itemId);
+    // Recalculate cart count
+    cartCount.value = items.value.reduce((sum, item) => sum + item.quantity, 0);
+};
+
 onMounted(() => {
     getItems();
 });
@@ -34,11 +50,22 @@ onMounted(() => {
 
 <template>
     <AppLayout>
-        <div>
-            <h1>Basket</h1>
-            <p v-if="cartCount">{{ cartCount }}</p>
-            <div v-for="item in items" :key="item.id">
-                <p>{{ item.product.name }}</p>
+        <div class="space-y-6">
+            <h1 class="text-3xl font-bold">Basket</h1>
+            <p v-if="cartCount" class="text-muted-foreground">
+                {{ cartCount }} item{{ cartCount !== 1 ? 's' : '' }} in your basket
+            </p>
+            <div v-if="items.length > 0" class="space-y-4">
+                <CartItem 
+                    v-for="item in items" 
+                    :key="item.id"
+                    :item="item"
+                    @quantity-changed="handleQuantityChanged"
+                    @item-removed="handleItemRemoved"
+                />
+            </div>
+            <div v-else class="text-center py-8">
+                <p class="text-muted-foreground">Your basket is empty</p>
             </div>
         </div>
     </AppLayout>

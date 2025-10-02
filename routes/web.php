@@ -22,6 +22,9 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name
 
 Route::post('/cart/add', [CardItemController::class, 'addCardItem'])->name('cart.add');
 Route::get('/cart', [CardItemController::class, 'getCartItems'])->name('cart.items');
+Route::patch('/cart/{id}/increment', [CardItemController::class, 'incrementQuantity'])->name('cart.increment');
+Route::patch('/cart/{id}/decrement', [CardItemController::class, 'decrementQuantity'])->name('cart.decrement');
+Route::patch('/cart/{id}/update', [CardItemController::class, 'updateQuantity'])->name('cart.update');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
