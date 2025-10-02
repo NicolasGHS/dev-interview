@@ -12,9 +12,9 @@ import { getInitials } from '@/composables/useInitials';
 import { cn } from '@/lib/utils';
 import { basket, dashboard } from '@/routes';
 import type { User } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage, router } from '@inertiajs/vue3';
 import { Search, ShoppingCart, Heart } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 
 interface Props {
     class?: string;
@@ -27,10 +27,38 @@ const user = computed(() => page.props.auth?.user as User | undefined);
 
 const searchQuery = ref('');
 
+// Initialize search query from URL when on dashboard
+onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    if (searchParam && window.location.pathname === '/dashboard') {
+        searchQuery.value = searchParam;
+    }
+});
+
 const handleSearch = () => {
-    // Search functionality can be implemented later
-    console.log('Search:', searchQuery.value);
+    const params = new URLSearchParams();
+    if (searchQuery.value.trim()) {
+        params.append('search', searchQuery.value.trim());
+    }
+    
+    const url = searchQuery.value.trim() ? `/dashboard?${params.toString()}` : '/dashboard';
+    router.visit(url, {
+        preserveState: true,
+        preserveScroll: false,
+    });
 };
+
+// Debounce search for real-time updates
+let searchTimeout: number;
+watch(searchQuery, () => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        if (window.location.pathname === '/dashboard') {
+            handleSearch();
+        }
+    }, 300);
+});
 </script>
 
 <template>

@@ -16,8 +16,16 @@ class DashboardController extends Controller
     {
         $page = $request->get('page', 1);
         $perPage = $request->get('per_page', 10);
+        $search = $request->get('search', '');
 
-        $products = Product::latest()->paginate($perPage, ['*'], 'page', $page);
+        if ($search) {
+            $products = Product::where('name', 'LIKE', '%' . $search . '%')
+                ->orWhere('description', 'LIKE', '%' . $search . '%')
+                ->latest()
+                ->paginate($perPage, ['*'], 'page', $page);
+        } else {
+            $products = Product::latest()->paginate($perPage, ['*'], 'page', $page);
+        }
 
         return Inertia::render('Dashboard', [
             'products' => [
@@ -32,6 +40,7 @@ class DashboardController extends Controller
                     'has_more_pages' => $products->hasMorePages(),
                 ],
             ],
+            'search' => $search,
         ]);
     }
 

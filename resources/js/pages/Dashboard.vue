@@ -8,6 +8,7 @@ import ProductCard from '@/components/ProductCard.vue';
 
 interface Props {
     products: ProductsResponse;
+    search?: string;
 }
 
 const props = defineProps<Props>();
@@ -20,7 +21,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const handlePageChange = (page: number): void => {
-    router.visit(`/dashboard?page=${page}`, {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    if (props.search) {
+        params.append('search', props.search);
+    }
+    
+    router.visit(`/dashboard?${params.toString()}`, {
         preserveState: true,
         preserveScroll: true,
     });
@@ -41,6 +48,7 @@ const handlePageChange = (page: number): void => {
                         Showing {{ props.products.pagination.from || 0 }} - 
                         {{ props.products.pagination.to || 0 }} of 
                         {{ props.products.pagination.total }} products
+                        {{ props.search ? `for "${props.search}"` : '' }}
                     </p>
                 </div>
                 
@@ -69,12 +77,15 @@ const handlePageChange = (page: number): void => {
                         Showing {{ props.products.pagination.from || 0 }} - 
                         {{ props.products.pagination.to || 0 }} of 
                         {{ props.products.pagination.total }} products
+                        {{ props.search ? `for "${props.search}"` : '' }}
                     </p>
                 </div>
 
                 <!-- Empty State -->
                 <div v-if="props.products.data.length === 0" class="text-center py-8">
-                    <p class="text-muted-foreground">No products found.</p>
+                    <p class="text-muted-foreground">
+                        {{ props.search ? `No products found for "${props.search}".` : 'No products found.' }}
+                    </p>
                 </div>
             </div>
         </div>

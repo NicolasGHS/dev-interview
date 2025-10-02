@@ -48,6 +48,36 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * Search products by name or description.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $query = $request->get('q', '');
+        $perPage = $request->get('per_page', 15);
+        $perPage = min($perPage, 100);
+
+        $products = Product::where('name', 'LIKE', '%' . $query . '%')
+            ->orWhere('description', 'LIKE', '%' . $query . '%')
+            ->latest()
+            ->paginate($perPage);
+
+        return response()->json([
+            'data' => $products->items(),
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+                'from' => $products->firstItem(),
+                'to' => $products->lastItem(),
+                'has_more_pages' => $products->hasMorePages(),
+            ],
+        ]);
+    }
+
     public function getProductById(int $id)
     {
         $product = Product::findOrFail($id);
