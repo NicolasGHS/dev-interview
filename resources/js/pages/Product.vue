@@ -3,17 +3,17 @@ import { Product, type BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { type PageProps as InertiaPageProps } from '@inertiajs/core';
 import { formatPrice } from '@/lib/utils';
+import { route } from 'ziggy-js';
+import { Heart } from 'lucide-vue-next';
 import AddCardButton from '@/components/AddCardButton.vue';
-import SaveButton from '@/components/SaveButton.vue';
+import Button from '@/components/ui/button/Button.vue';
 
 interface PageProps extends InertiaPageProps {
   product: Product;
 }
-
-
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,6 +24,70 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const page = usePage<PageProps>();
 const product = computed(() => page.props.product);
+
+const isLiked = ref(false);
+const isUpdatingLike = ref(false);
+
+const checkIfLiked = async () => {
+    try {
+        const response = await fetch(route('api.likes.check'), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                product_ids: [product.value.id]
+            }),
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            isLiked.value = data.liked_product_ids.includes(product.value.id);
+        }
+    } catch (error) {
+        console.error('Error checking like status:', error);
+    }
+};
+
+const toggleLike = async () => {
+    if (isUpdatingLike.value) return;
+    
+    isUpdatingLike.value = true;
+    
+    try {
+        const response = await fetch(route('likes.toggle', product.value.id), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            },
+            credentials: 'include',
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            isLiked.value = data.liked;
+        } else {
+            console.error('Failed to toggle like:', data.message);
+        }
+    } catch (error) {
+        console.error('Error toggling like:', error);
+    } finally {
+        isUpdatingLike.value = false;
+    }
+};
+
+onMounted(() => {
+    checkIfLiked();
+});
 
 </script>
 
@@ -57,7 +121,27 @@ const product = computed(() => page.props.product);
           <!-- Action Buttons -->
           <div class="flex items-center gap-4 pt-6">
             <AddCardButton :id="product.id" />
-            <SaveButton />  
+            <Button
+              variant="outline"
+              size="lg"
+              :disabled="isUpdatingLike"
+              @click="toggleLike"
+              :class="[
+                'flex items-center justify-center p-3 transition-all duration-200',
+                isLiked 
+                  ? 'text-red-500 border-red-500 hover:bg-red-50' 
+                  : 'text-muted-foreground hover:text-red-500 hover:border-red-500'
+              ]"
+              :title="isLiked ? 'Remove from Favorites' : 'Add to Favorites'"
+            >
+              <Heart 
+                :size="20" 
+                :class="[
+                  'transition-all duration-200',
+                  isLiked ? 'fill-current' : ''
+                ]"
+              />
+            </Button>
           </div>
         </div>
       </div>
