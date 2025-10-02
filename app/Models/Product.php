@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -29,4 +30,20 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
     ];
+
+    /**
+     * Get the likes for the product.
+     */
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * Get the users who liked this product.
+     */
+    public function likedByUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'likes');
+    }
 }

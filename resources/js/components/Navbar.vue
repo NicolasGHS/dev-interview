@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { basket, dashboard } from '@/routes';
 import type { User } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Search, ShoppingCart } from 'lucide-vue-next';
+import { Search, ShoppingCart, Heart } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 interface Props {
@@ -68,6 +68,14 @@ const handleSearch = () => {
 
         <!-- Right side - Actions and User -->
         <div class="flex items-center space-x-2">
+            <!-- Favorites Button -->
+            <Button variant="ghost" size="sm" as-child>
+                <Link href="/likes" class="relative">
+                    <Heart class="h-5 w-5" />
+                    <span class="sr-only">Favorites</span>
+                </Link>
+            </Button>
+
             <!-- Basket Button -->
             <Button variant="ghost" size="sm" as-child>
                 <Link :href="basket()" class="relative">

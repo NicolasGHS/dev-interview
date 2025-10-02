@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CardItemController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,6 +13,7 @@ Route::get('/', function () {
 Route::get('/basket', function () {
     return Inertia::render('Basket');
 })->name('basket');
+Route::get('/likes', [LikeController::class, 'index'])->name('likes');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('dashboard-navbar', [DashboardController::class, 'indexNavbar'])->middleware(['auth', 'verified'])->name('dashboard.navbar');
@@ -26,6 +28,10 @@ Route::patch('/cart/{id}/increment', [CardItemController::class, 'incrementQuant
 Route::patch('/cart/{id}/decrement', [CardItemController::class, 'decrementQuantity'])->name('cart.decrement');
 Route::patch('/cart/{id}/update', [CardItemController::class, 'updateQuantity'])->name('cart.update');
 Route::delete('/cart/{id}', [CardItemController::class, 'removeCartItem'])->name('cart.remove');
+
+Route::post('/likes/{product}/toggle', [LikeController::class, 'toggleLike'])->name('likes.toggle');
+Route::get('/api/likes', [LikeController::class, 'getLikedProducts'])->name('api.likes');
+Route::post('/api/likes/check', [LikeController::class, 'checkLikes'])->name('api.likes.check');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
