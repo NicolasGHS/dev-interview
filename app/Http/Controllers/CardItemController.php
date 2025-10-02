@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CardItem;
-use App\Models\Product;
+use App\Services\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CardItemController extends Controller
 {
+    protected CartService $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     /**
      * Add a product to the user's cart
      */
@@ -21,7 +27,7 @@ class CardItemController extends Controller
             'product_id' => 'required|integer',
         ]);
 
-        CardItem::create($validated);
+        $this->cartService->addItemToCart($validated['user_id'], $validated['product_id']);
 
         return redirect()->route('basket')->with('success', 'Added to card');
     }
@@ -37,14 +43,12 @@ class CardItemController extends Controller
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        $cartItems = CardItem::where('user_id', $userId)
-            ->with('product')
-            ->get();
+        $result = $this->cartService->getCartItems($userId);
 
         return response()->json([
             'success' => true,
-            'cart_items' => $cartItems,
-            'cart_count' => $cartItems->sum('quantity'),
+            'cart_items' => $result['cart_items'],
+            'cart_count' => $result['cart_count'],
         ]);
     }
 
@@ -60,17 +64,13 @@ class CardItemController extends Controller
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
-            $cartItem = CardItem::where('id', $id)
-                ->where('user_id', $userId)
-                ->firstOrFail();
-
-            $cartItem->delete();
+            $result = $this->cartService->removeCartItem($userId, $id);
 
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Item removed from cart',
-                    'cart_count' => CardItem::where('user_id', $userId)->sum('quantity'),
+                    'message' => $result['message'],
+                    'cart_count' => $result['cart_count'],
                 ]);
             }
 
@@ -100,17 +100,13 @@ class CardItemController extends Controller
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
-            $cartItem = CardItem::where('id', $id)
-                ->where('user_id', $userId)
-                ->firstOrFail();
-
-            $cartItem->increment('quantity');
+            $result = $this->cartService->incrementQuantity($userId, $id);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Quantity updated',
-                'item' => $cartItem->load('product'),
-                'cart_count' => CardItem::where('user_id', $userId)->sum('quantity'),
+                'message' => $result['message'],
+                'item' => $result['item'],
+                'cart_count' => $result['cart_count'],
             ]);
 
         } catch (\Exception $e) {
@@ -133,29 +129,22 @@ class CardItemController extends Controller
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
-            $cartItem = CardItem::where('id', $id)
-                ->where('user_id', $userId)
-                ->firstOrFail();
+            $result = $this->cartService->decrementQuantity($userId, $id);
 
-            if ($cartItem->quantity <= 1) {
-                // Remove item if quantity would go to 0
-                $cartItem->delete();
-                
+            if (isset($result['item_removed']) && $result['item_removed']) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Item removed from cart',
+                    'message' => $result['message'],
                     'item_removed' => true,
-                    'cart_count' => CardItem::where('user_id', $userId)->sum('quantity'),
+                    'cart_count' => $result['cart_count'],
                 ]);
             }
 
-            $cartItem->decrement('quantity');
-
             return response()->json([
                 'success' => true,
-                'message' => 'Quantity updated',
-                'item' => $cartItem->load('product'),
-                'cart_count' => CardItem::where('user_id', $userId)->sum('quantity'),
+                'message' => $result['message'],
+                'item' => $result['item'],
+                'cart_count' => $result['cart_count'],
             ]);
 
         } catch (\Exception $e) {
@@ -182,17 +171,13 @@ class CardItemController extends Controller
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
-            $cartItem = CardItem::where('id', $id)
-                ->where('user_id', $userId)
-                ->firstOrFail();
-
-            $cartItem->update(['quantity' => $validated['quantity']]);
+            $result = $this->cartService->updateQuantity($userId, $id, $validated['quantity']);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Quantity updated',
-                'item' => $cartItem->load('product'),
-                'cart_count' => CardItem::where('user_id', $userId)->sum('quantity'),
+                'message' => $result['message'],
+                'item' => $result['item'],
+                'cart_count' => $result['cart_count'],
             ]);
 
         } catch (\Exception $e) {
