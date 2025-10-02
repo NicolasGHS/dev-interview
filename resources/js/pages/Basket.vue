@@ -69,7 +69,7 @@ onMounted(() => {
                 <div v-else class="text-center py-8">
                     <p class="text-muted-foreground">Your basket is empty</p>
                 </div>
-                <CartOverview :items="items" />
+                <CartOverview :items="items" v-if="items.length > 0" />
             </div>
         </div>
     </AppLayout>
