@@ -121,4 +121,15 @@ class CartService
             'cart_count' => $cartCount,
         ];
     }
+
+    public function clearCart(int $userId): array
+    {
+        $deletedCount = CardItem::where('user_id', $userId)->delete();
+
+        return [
+            'message' => 'Cart cleared successfully',
+            'items_removed' => $deletedCount,
+            'cart_count' => 0,
+        ];
+    }
 }

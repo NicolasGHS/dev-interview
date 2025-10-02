@@ -187,4 +187,33 @@ class CardItemController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Clear all items from user's cart
+     */
+    public function clearCart(Request $request): JsonResponse
+    {
+        try {
+            $userId = Auth::id();
+
+            if (! $userId) {
+                return response()->json(['error' => 'User not authenticated'], 401);
+            }
+
+            $result = $this->cartService->clearCart($userId);
+
+            return response()->json([
+                'success' => true,
+                'message' => $result['message'],
+                'items_removed' => $result['items_removed'],
+                'cart_count' => $result['cart_count'],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while clearing cart',
+            ], 500);
+        }
+    }
 }

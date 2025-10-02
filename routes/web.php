@@ -13,6 +13,9 @@ Route::get('/', function () {
 Route::get('/basket', function () {
     return Inertia::render('Basket');
 })->name('basket');
+Route::get('/order-confirmation', function () {
+    return Inertia::render('OrderConfirmation');
+})->name('order.confirmation');
 Route::get('/likes', [LikeController::class, 'index'])->name('likes');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -25,6 +28,7 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name
 
 Route::post('/cart/add', [CardItemController::class, 'addCardItem'])->name('cart.add');
 Route::get('/cart', [CardItemController::class, 'getCartItems'])->name('cart.items');
+Route::delete('/cart/clear', [CardItemController::class, 'clearCart'])->name('cart.clear');
 Route::patch('/cart/{id}/increment', [CardItemController::class, 'incrementQuantity'])->name('cart.increment');
 Route::patch('/cart/{id}/decrement', [CardItemController::class, 'decrementQuantity'])->name('cart.decrement');
 Route::patch('/cart/{id}/update', [CardItemController::class, 'updateQuantity'])->name('cart.update');
