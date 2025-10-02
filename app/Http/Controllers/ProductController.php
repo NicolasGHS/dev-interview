@@ -2,19 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PaginationHelper;
 use App\Models\Product;
+use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProductController extends Controller
 {
+    protected ProductService $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display the specified product.
      */
     public function show(int $id): Response
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productService->getProductById($id);
 
         return Inertia::render('Product', [
             'product' => $product,
@@ -22,65 +32,24 @@ class ProductController extends Controller
     }
 
     /**
-     * Display a paginated listing of products.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getProductsPaginated(Request $request)
-    {
-        $perPage = $request->get('per_page', 15);
-        $perPage = min($perPage, 100);
-
-        $products = Product::latest()
-            ->paginate($perPage);
-
-        return response()->json([
-            'data' => $products->items(),
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-                'from' => $products->firstItem(),
-                'to' => $products->lastItem(),
-                'has_more_pages' => $products->hasMorePages(),
-            ],
-        ]);
-    }
-
-    /**
      * Search products by name or description.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $query = $request->get('q', '');
-        $perPage = $request->get('per_page', 15);
-        $perPage = min($perPage, 100);
+        $perPage = min((int) $request->get('per_page', 15), 100);
 
-        $products = Product::where('name', 'LIKE', '%' . $query . '%')
-            ->orWhere('description', 'LIKE', '%' . $query . '%')
-            ->latest()
-            ->paginate($perPage);
+        $paginator = $this->productService->searchProducts($query, $perPage);
 
         return response()->json([
-            'data' => $products->items(),
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-                'from' => $products->firstItem(),
-                'to' => $products->lastItem(),
-                'has_more_pages' => $products->hasMorePages(),
-            ],
+            'data' => $paginator->items(),
+            'pagination' => PaginationHelper::format($paginator),
         ]);
     }
 
     public function getProductById(int $id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productService->getProductById($id);
 
         return response()->json(
             [

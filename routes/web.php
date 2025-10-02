@@ -19,7 +19,7 @@ Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['aut
 Route::get('dashboard-navbar', [DashboardController::class, 'indexNavbar'])->middleware(['auth', 'verified'])->name('dashboard.navbar');
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
-Route::get('/api/products', [ProductController::class, 'getProductsPaginated'])->name('api.products');
+// Route::get('/api/products', [ProductController::class, 'getProductsPaginated'])->name('api.products');
 Route::get('/api/products/search', [ProductController::class, 'search'])->name('api.products.search');
 Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name('product.getById');
 

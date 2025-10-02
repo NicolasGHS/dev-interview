@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Like;
-use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +11,13 @@ use Inertia\Response;
 
 class LikeController extends Controller
 {
+    protected ProductService $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display the user's liked products page
      */
@@ -27,13 +33,11 @@ class LikeController extends Controller
     {
         $userId = Auth::id();
 
-        if (!$userId) {
+        if (! $userId) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        $likedProducts = Product::whereHas('likes', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->get();
+        $likedProducts = $this->productService->getLikedProducts($userId);
 
         return response()->json([
             'success' => true,
@@ -50,38 +54,17 @@ class LikeController extends Controller
         try {
             $userId = Auth::id();
 
-            if (!$userId) {
+            if (! $userId) {
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
 
-            $product = Product::findOrFail($productId);
-
-            $existingLike = Like::where('user_id', $userId)
-                ->where('product_id', $productId)
-                ->first();
-
-            if ($existingLike) {
-                // Unlike
-                $existingLike->delete();
-                $liked = false;
-                $message = 'Product removed from favorites';
-            } else {
-                // Like
-                Like::create([
-                    'user_id' => $userId,
-                    'product_id' => $productId,
-                ]);
-                $liked = true;
-                $message = 'Product added to favorites';
-            }
-
-            $likesCount = Like::where('user_id', $userId)->count();
+            $result = $this->productService->toggleLike($userId, $productId);
 
             return response()->json([
                 'success' => true,
-                'message' => $message,
-                'liked' => $liked,
-                'likes_count' => $likesCount,
+                'message' => $result['message'],
+                'liked' => $result['liked'],
+                'likes_count' => $result['likes_count'],
             ]);
 
         } catch (\Exception $e) {
@@ -99,16 +82,13 @@ class LikeController extends Controller
     {
         $userId = Auth::id();
 
-        if (!$userId) {
+        if (! $userId) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
         $productIds = $request->input('product_ids', []);
-        
-        $likedProductIds = Like::where('user_id', $userId)
-            ->whereIn('product_id', $productIds)
-            ->pluck('product_id')
-            ->toArray();
+
+        $likedProductIds = $this->productService->checkUserLikes($userId, $productIds);
 
         return response()->json([
             'success' => true,
