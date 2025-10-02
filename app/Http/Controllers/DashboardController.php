@@ -2,45 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
+    protected ProductService $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
+    // TODO: check if functions can be merged
+
     /**
      * Display the dashboard with products.
      */
     public function index(Request $request): Response
     {
-        $page = $request->get('page', 1);
-        $perPage = $request->get('per_page', 10);
-        $search = $request->get('search', '');
-
-        if ($search) {
-            $products = Product::where('name', 'LIKE', '%' . $search . '%')
-                ->orWhere('description', 'LIKE', '%' . $search . '%')
-                ->latest()
-                ->paginate($perPage, ['*'], 'page', $page);
-        } else {
-            $products = Product::latest()->paginate($perPage, ['*'], 'page', $page);
-        }
+        $products = $this->productService->getPaginatedProducts(
+            $request->get('search'),
+            $request->get('per_page', 10),
+            $request->get('page', 1),
+        );
 
         return Inertia::render('Dashboard', [
-            'products' => [
-                'data' => $products->items(),
-                'pagination' => [
-                    'current_page' => $products->currentPage(),
-                    'last_page' => $products->lastPage(),
-                    'per_page' => $products->perPage(),
-                    'total' => $products->total(),
-                    'from' => $products->firstItem(),
-                    'to' => $products->lastItem(),
-                    'has_more_pages' => $products->hasMorePages(),
-                ],
-            ],
-            'search' => $search,
+            'products' => $products,
+            'search' => $request->get('search', ''),
         ]);
     }
 
@@ -49,24 +40,17 @@ class DashboardController extends Controller
      */
     public function indexNavbar(Request $request): Response
     {
-        $page = $request->get('page', 1);
-        $perPage = $request->get('per_page', 10);
 
-        $products = Product::latest()->paginate($perPage, ['*'], 'page', $page);
+        $products = $this->productService->getPaginatedProducts(
+            $request->get('search'),
+            $request->get('per_page', 10),
+            $request->get('page', 1),
+        );
 
         return Inertia::render('DashboardNavbar', [
-            'products' => [
-                'data' => $products->items(),
-                'pagination' => [
-                    'current_page' => $products->currentPage(),
-                    'last_page' => $products->lastPage(),
-                    'per_page' => $products->perPage(),
-                    'total' => $products->total(),
-                    'from' => $products->firstItem(),
-                    'to' => $products->lastItem(),
-                    'has_more_pages' => $products->hasMorePages(),
-                ],
-            ],
+            'products' => $products,
+            'search' => $request->get('search', ''),
+
         ]);
     }
 }
