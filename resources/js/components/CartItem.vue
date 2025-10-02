@@ -2,6 +2,7 @@
 import { formatPrice } from '@/lib/utils';
 import { route } from 'ziggy-js';
 import { ref } from 'vue';
+import { Trash2 } from 'lucide-vue-next';
 import Card from './ui/card/Card.vue';
 import Button from './ui/button/Button.vue';
 
@@ -72,6 +73,42 @@ const updateQuantity = async (action: 'increment' | 'decrement') => {
 
 const incrementQuantity = () => updateQuantity('increment');
 const decrementQuantity = () => updateQuantity('decrement');
+
+const deleteItem = async () => {
+    if (isUpdating.value) return;
+    
+    isUpdating.value = true;
+    
+    try {
+        const endpoint = route('cart.remove', props.item.id);
+        
+        // Get CSRF token from meta tag
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+        const response = await fetch(endpoint, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken || '',
+            },
+            credentials: 'include',
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            emit('itemRemoved', props.item.id);
+        } else {
+            console.error('Failed to delete item:', data.message);
+        }
+    } catch (error) {
+        console.error('Error deleting item:', error);
+    } finally {
+        isUpdating.value = false;
+    }
+};
 </script>
 
 <template>
@@ -88,7 +125,19 @@ const decrementQuantity = () => updateQuantity('decrement');
             
             <!-- Product Details -->
             <div class="flex-1 space-y-2">
-                <h3 class="font-semibold text-lg">{{ props.item.product.name }}</h3>
+                <div class="flex items-start justify-between">
+                    <h3 class="font-semibold text-lg">{{ props.item.product.name }}</h3>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        :disabled="isUpdating"
+                        @click="deleteItem"
+                        class="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        title="Remove from cart"
+                    >
+                        <Trash2 :size="16" />
+                    </Button>
+                </div>
                 <p 
                     v-if="props.item.product.description" 
                     class="text-sm text-muted-foreground line-clamp-2"

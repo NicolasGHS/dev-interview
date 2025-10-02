@@ -25,6 +25,7 @@ Route::get('/cart', [CardItemController::class, 'getCartItems'])->name('cart.ite
 Route::patch('/cart/{id}/increment', [CardItemController::class, 'incrementQuantity'])->name('cart.increment');
 Route::patch('/cart/{id}/decrement', [CardItemController::class, 'decrementQuantity'])->name('cart.decrement');
 Route::patch('/cart/{id}/update', [CardItemController::class, 'updateQuantity'])->name('cart.update');
+Route::delete('/cart/{id}', [CardItemController::class, 'removeCartItem'])->name('cart.remove');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
