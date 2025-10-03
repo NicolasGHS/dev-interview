@@ -28,6 +28,7 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById'])->name
 
 Route::post('/cart/add', [CardItemController::class, 'addCardItem'])->name('cart.add');
 Route::get('/cart', [CardItemController::class, 'getCartItems'])->name('cart.items');
+Route::post('/cart/check', [CardItemController::class, 'checkCartStatus'])->name('cart.check');
 Route::delete('/cart/clear', [CardItemController::class, 'clearCart'])->name('cart.clear');
 Route::patch('/cart/{id}/increment', [CardItemController::class, 'incrementQuantity'])->name('cart.increment');
 Route::patch('/cart/{id}/decrement', [CardItemController::class, 'decrementQuantity'])->name('cart.decrement');

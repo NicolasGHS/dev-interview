@@ -132,4 +132,17 @@ class CartService
             'cart_count' => 0,
         ];
     }
+
+    public function isProductInCart(int $userId, int $productId): array
+    {
+        $cartItem = CardItem::where('user_id', $userId)
+            ->where('product_id', $productId)
+            ->first();
+
+        return [
+            'in_cart' => $cartItem !== null,
+            'quantity' => $cartItem ? $cartItem->quantity : 0,
+            'cart_item_id' => $cartItem ? $cartItem->id : null,
+        ];
+    }
 }

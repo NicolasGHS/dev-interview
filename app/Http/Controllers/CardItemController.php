@@ -27,9 +27,18 @@ class CardItemController extends Controller
             'product_id' => 'required|integer',
         ]);
 
-        $this->cartService->addItemToCart($validated['user_id'], $validated['product_id']);
+        $cartItem = $this->cartService->addItemToCart($validated['user_id'], $validated['product_id']);
 
-        return redirect()->route('basket')->with('success', 'Added to card');
+        // Return JSON response if request expects JSON, otherwise redirect
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Added to cart',
+                'item' => $cartItem,
+            ]);
+        }
+
+        return redirect()->route('basket')->with('success', 'Added to cart');
     }
 
     /**
@@ -213,6 +222,39 @@ class CardItemController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while clearing cart',
+            ], 500);
+        }
+    }
+
+    /**
+     * Check if a product is in the user's cart
+     */
+    public function checkCartStatus(Request $request): JsonResponse
+    {
+        try {
+            $validated = $request->validate([
+                'product_id' => 'required|integer',
+            ]);
+
+            $userId = Auth::id();
+
+            if (! $userId) {
+                return response()->json(['error' => 'User not authenticated'], 401);
+            }
+
+            $result = $this->cartService->isProductInCart($userId, $validated['product_id']);
+
+            return response()->json([
+                'success' => true,
+                'in_cart' => $result['in_cart'],
+                'quantity' => $result['quantity'],
+                'cart_item_id' => $result['cart_item_id'],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while checking cart status',
             ], 500);
         }
     }
