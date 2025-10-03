@@ -4,9 +4,12 @@ import { Product } from '@/types';
 import { router } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Heart } from 'lucide-vue-next';
 import Card from './ui/card/Card.vue';
 import Button from './ui/button/Button.vue';
+
+const { t } = useI18n();
 
 interface Props {
     product: Product;
@@ -107,7 +110,7 @@ onMounted(() => {
                     ? 'text-red-500 hover:text-red-600' 
                     : 'text-muted-foreground hover:text-foreground'
             ]"
-            title="Add to favorites"
+            :title="isLiked ? t('remove_from_favorites') : t('add_to_favorites')"
         >
             <Heart 
                 :size="18" 

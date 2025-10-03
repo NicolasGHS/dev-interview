@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import UserMenuContent from '@/components/UserMenuContent.vue';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { getInitials } from '@/composables/useInitials';
 import { cn } from '@/lib/utils';
 import { basket, dashboard } from '@/routes';
@@ -96,6 +97,9 @@ watch(searchQuery, () => {
 
         <!-- Right side - Actions and User -->
         <div class="flex items-center space-x-2">
+            <!-- Language Switcher -->
+            <LanguageSwitcher />
+            
             <!-- Favorites Button -->
             <Button variant="ghost" size="sm" as-child>
                 <Link href="/likes" class="relative">

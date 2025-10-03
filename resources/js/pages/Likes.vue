@@ -2,9 +2,11 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { route } from 'ziggy-js';
 import { Product } from '@/types';
 
+const { t } = useI18n();
 const likedProducts = ref<Product[]>([]);
 const likesCount = ref(0);
 const isLoading = ref(true);
@@ -46,9 +48,9 @@ onMounted(() => {
     <AppLayout>
         <div class="space-y-6">
             <div class="flex items-center justify-between">
-                <h1 class="text-3xl font-bold">My Favorites</h1>
+                <h1 class="text-3xl font-bold">{{ t('favorites') }}</h1>
                 <div v-if="!isLoading" class="text-muted-foreground">
-                    {{ likesCount }} item{{ likesCount !== 1 ? 's' : '' }}
+                    {{ likesCount }} {{ likesCount !== 1 ? t('items') : t('item') }}
                 </div>
             </div>
             
@@ -69,9 +71,9 @@ onMounted(() => {
                 <div class="space-y-4">
                     <div class="text-6xl text-muted-foreground/50">♡</div>
                     <div>
-                        <h3 class="text-lg font-semibold">No favorites yet</h3>
+                        <h3 class="text-lg font-semibold">{{ t('no_favorites_yet') }}</h3>
                         <p class="text-muted-foreground">
-                            Start exploring products and add them to your favorites!
+                            {{ t('start_exploring') }}
                         </p>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import i18n from './i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -17,10 +18,18 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .mount(el);
+            .use(i18n);
+
+        // Set the locale from server-side props
+        const locale = props.initialPage.props.locale as string;
+        if (locale && ['en', 'fr', 'nl'].includes(locale)) {
+            i18n.global.locale.value = locale as 'en' | 'fr' | 'nl';
+        }
+
+        app.mount(el);
     },
     progress: {
         color: '#4B5563',

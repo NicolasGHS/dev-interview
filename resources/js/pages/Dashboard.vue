@@ -5,6 +5,9 @@ import { type BreadcrumbItem, type ProductsResponse } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
 import { Pagination } from '@/components/ui/pagination';
 import ProductCard from '@/components/ProductCard.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Props {
     products: ProductsResponse;
@@ -15,7 +18,7 @@ const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: t('dashboard'),
         href: dashboard().url,
     },
 ];
@@ -35,7 +38,7 @@ const handlePageChange = (page: number): void => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head :title="t('dashboard')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div
@@ -43,11 +46,11 @@ const handlePageChange = (page: number): void => {
         >
             <div class="grid auto-rows-min gap-4">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold">Products</h1>
+                    <h1 class="text-2xl font-bold">{{ t('products') }}</h1>
                     <p class="text-sm text-muted-foreground">
-                        Showing {{ props.products.pagination.from || 0 }} - 
-                        {{ props.products.pagination.to || 0 }} of 
-                        {{ props.products.pagination.total }} products
+                        {{ t('showing') }} {{ props.products.pagination.from || 0 }} - 
+                        {{ props.products.pagination.to || 0 }} {{ t('of') }} 
+                        {{ props.products.pagination.total }} {{ t('products').toLowerCase() }}
                         {{ props.search ? `for "${props.search}"` : '' }}
                     </p>
                 </div>
@@ -74,9 +77,9 @@ const handlePageChange = (page: number): void => {
                 <!-- Pagination Info -->
                 <div v-if="props.products.pagination.total > 0" class="mt-4 text-center">
                     <p class="text-sm text-muted-foreground">
-                        Showing {{ props.products.pagination.from || 0 }} - 
-                        {{ props.products.pagination.to || 0 }} of 
-                        {{ props.products.pagination.total }} products
+                        {{ t('showing') }} {{ props.products.pagination.from || 0 }} - 
+                        {{ props.products.pagination.to || 0 }} {{ t('of') }} 
+                        {{ props.products.pagination.total }} {{ t('products').toLowerCase() }}
                         {{ props.search ? `for "${props.search}"` : '' }}
                     </p>
                 </div>
@@ -84,7 +87,7 @@ const handlePageChange = (page: number): void => {
                 <!-- Empty State -->
                 <div v-if="props.products.data.length === 0" class="text-center py-8">
                     <p class="text-muted-foreground">
-                        {{ props.search ? `No products found for "${props.search}".` : 'No products found.' }}
+                        {{ props.search ? `${t('no_products_found')} for "${props.search}".` : t('no_products_found') + '.' }}
                     </p>
                 </div>
             </div>

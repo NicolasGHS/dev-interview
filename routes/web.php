@@ -39,5 +39,18 @@ Route::post('/likes/{product}/toggle', [LikeController::class, 'toggleLike'])->n
 Route::get('/api/likes', [LikeController::class, 'getLikedProducts'])->name('api.likes');
 Route::post('/api/likes/check', [LikeController::class, 'checkLikes'])->name('api.likes.check');
 
+// Language switching route
+Route::post('/set-locale', function (Illuminate\Http\Request $request) {
+    $locale = $request->input('locale');
+    $availableLocales = ['en', 'fr', 'nl'];
+    
+    if (in_array($locale, $availableLocales)) {
+        session()->put('locale', $locale);
+        return response()->json(['success' => true, 'locale' => $locale]);
+    }
+    
+    return response()->json(['success' => false], 422);
+})->name('set.locale');
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

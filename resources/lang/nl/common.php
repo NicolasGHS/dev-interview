@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'dashboard' => 'Dashboard',
+    'products' => 'Producten',
+    'favorites' => 'Mijn Favorieten',
+    'product' => 'Product',
+    'description' => 'Beschrijving',
+    'price' => 'Prijs',
+    'add_to_cart' => 'Toevoegen aan winkelwagen',
+    'add_to_favorites' => 'Toevoegen aan favorieten',
+    'remove_from_favorites' => 'Verwijderen uit favorieten',
+    'no_products_found' => 'Geen producten gevonden',
+    'no_favorites_yet' => 'Nog geen favorieten',
+    'start_exploring' => 'Begin met het verkennen van producten en voeg ze toe aan je favorieten!',
+    'showing' => 'Weergeven',
+    'of' => 'van',
+    'items' => 'items',
+    'item' => 'item',
+    'search' => 'Zoeken',
+    'welcome' => 'Welkom',
+    'basket' => 'Winkelmandje',
+    'order_confirmation' => 'Orderbevestiging',
+    'language' => 'Taal',
+];
