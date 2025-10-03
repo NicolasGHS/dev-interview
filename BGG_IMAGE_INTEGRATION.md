@@ -7,17 +7,20 @@ This system automatically fetches high-quality board game images from the BoardG
 ## How It Works
 
 ### 1. **BoardGameGeek API Service**
+
 - Extracts game IDs from BGG URLs (e.g., `224517` from `https://boardgamegeek.com/boardgame/224517/brass-birmingham`)
 - Calls BGG XML API: `https://boardgamegeek.com/xmlapi2/thing?id=224517&type=boardgame`
 - Parses XML response to extract image URLs
 - Includes rate limiting to respect BGG's API limits
 
 ### 2. **Database Structure**
+
 - Added `image_url` column to `products` table
 - Model accessor `$product->image` provides automatic fallback to default image
 - Stores full-resolution images from BGG
 
 ### 3. **Frontend Integration**
+
 - All components (ProductCard, Product page, CartItem) now use dynamic images
 - Automatic fallback to `/default_boardgame_image.avif` if no BGG image available
 - TypeScript interfaces updated to include image fields
@@ -25,6 +28,7 @@ This system automatically fetches high-quality board game images from the BoardG
 ## Commands Available
 
 ### Test BGG API
+
 ```bash
 # Test with sample games
 php artisan bgg:test --limit=5
@@ -34,6 +38,7 @@ php artisan bgg:test --game-id=224517
 ```
 
 ### Update Existing Products
+
 ```bash
 # Update 20 products without images
 php artisan products:update-images --limit=20
@@ -43,6 +48,7 @@ php artisan products:update-images --limit=50 --force
 ```
 
 ### Fresh Seeding with Images
+
 ```bash
 # Reset and reseed with images (WARNING: deletes existing data)
 php artisan migrate:fresh --seed
@@ -58,6 +64,7 @@ php artisan migrate:fresh --seed
 ## Image Quality
 
 BGG provides two image types:
+
 - **Full Image**: High-resolution (e.g., 800x600px)
 - **Thumbnail**: Smaller version (200x150px)
 
@@ -66,17 +73,20 @@ The system prefers full images but falls back to thumbnails if needed.
 ## Examples
 
 ### Successful BGG API Response
+
 ```
 Game: Brass: Birmingham (ID: 224517)
 Image: https://cf.geekdo-images.com/x3zxjr-Vw5iU4yDPg70Jgw__original/img/FpyxH41Y6_ROoePAilPNEhXnzO8=/0x0/filters:format(jpeg)/pic3490053.jpg
 ```
 
 ### Your Data Structure
+
 Your `boardgames.json` already contains BGG URLs:
+
 ```json
 {
-  "boardgame": "Brass: Birmingham",
-  "link_to_game": "https://boardgamegeek.com/boardgame/224517/brass-birmingham"
+    "boardgame": "Brass: Birmingham",
+    "link_to_game": "https://boardgamegeek.com/boardgame/224517/brass-birmingham"
 }
 ```
 
@@ -85,23 +95,25 @@ This makes the integration seamless!
 ## Quick Start
 
 1. **Update a few products immediately:**
-   ```bash
-   php artisan products:update-images --limit=10
-   ```
+
+    ```bash
+    php artisan products:update-images --limit=10
+    ```
 
 2. **Check your frontend** - images should now appear instead of the default
 
 3. **Update more products gradually:**
-   ```bash
-   php artisan products:update-images --limit=50
-   ```
+
+    ```bash
+    php artisan products:update-images --limit=50
+    ```
 
 4. **For new installations:** The seeder will automatically fetch images during `php artisan db:seed`
 
 ## Error Handling
 
 - Failed API calls are logged but don't break the process
-- Products without BGG URLs are skipped gracefully  
+- Products without BGG URLs are skipped gracefully
 - Network timeouts are handled with 30-second limits
 - XML parsing errors are caught and logged
 
