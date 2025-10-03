@@ -97,41 +97,57 @@ onMounted(() => {
 </script>
 
 <template>
-    <Card class="h-72 flex flex-col justify-between space-y-2 p-4 relative" @click="navigateToProduct(props.product.id)">
-        <!-- Like button -->
-        <Button
-            variant="ghost"
-            size="sm"
-            :disabled="isUpdatingLike"
-            @click="toggleLike"
-            class="absolute top-2 right-2 h-8 w-8 p-0 z-10"
-            :class="[
-                isLiked 
-                    ? 'text-red-500 hover:text-red-600' 
-                    : 'text-muted-foreground hover:text-foreground'
-            ]"
-            :title="isLiked ? t('remove_from_favorites') : t('add_to_favorites')"
-        >
-            <Heart 
-                :size="18" 
+    <Card class="overflow-hidden transition-all duration-200 hover:shadow-lg cursor-pointer group" @click="navigateToProduct(props.product.id)">
+        <!-- Image Section -->
+        <div class="relative">
+            <div class="aspect-[4/3] overflow-hidden">
+                <img 
+                    :src="props.product.image" 
+                    :alt="props.product.name" 
+                    class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105" 
+                />
+            </div>
+            
+            <!-- Like button overlay -->
+            <Button
+                variant="ghost"
+                size="sm"
+                :disabled="isUpdatingLike"
+                @click="toggleLike"
+                class="absolute top-3 right-3 h-9 w-9 p-0 bg-white/90 backdrop-blur-sm hover:bg-white shadow-sm"
                 :class="[
-                    'transition-all duration-200',
-                    isLiked ? 'fill-current' : ''
+                    isLiked 
+                        ? 'text-red-500 hover:text-red-600' 
+                        : 'text-gray-600 hover:text-gray-800'
                 ]"
-            />
-        </Button>
-        
-        <div class="flex-1 space-y-2">
-            <h3 class="font-semibold text-lg">{{ props.product.name }}</h3>
-            <img :src="props.product.image" :alt="props.product.name" class="w-full h-24 object-cover rounded" />
-            <p class="text-sm text-muted-foreground line-clamp-3">
-                {{ props.product.description }} 
-            </p>
+                :title="isLiked ? t('remove_from_favorites') : t('add_to_favorites')"
+            >
+                <Heart 
+                    :size="18" 
+                    :class="[
+                        'transition-all duration-200',
+                        isLiked ? 'fill-current' : ''
+                    ]"
+                />
+            </Button>
         </div>
-        <div class="flex items-center justify-between mt-auto">
-            <span class="text-2xl font-bold text-primary">
-                {{ formatPrice(props.product.price) }} 
-            </span>
+        
+        <!-- Content Section -->
+        <div class="p-4 space-y-3">
+            <div class="space-y-2">
+                <h3 class="font-semibold text-lg leading-tight line-clamp-2">
+                    {{ props.product.name }}
+                </h3>
+                <p class="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                    {{ props.product.description }} 
+                </p>
+            </div>
+            
+            <div class="pt-1">
+                <span class="text-xl font-bold text-primary">
+                    {{ formatPrice(props.product.price) }} 
+                </span>
+            </div>
         </div>
     </Card>
 </template>
