@@ -9,22 +9,25 @@ import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
+        title: t('profile'),
         href: editProfile(),
     },
     {
-        title: 'Password',
+        title: t('password'),
         href: editPassword(),
     },
     {
-        title: 'Two-Factor Auth',
+        title: t('two_factor_auth'),
         href: show(),
     },
     {
-        title: 'Appearance',
+        title: t('appearance'),
         href: editAppearance(),
     },
 ];
@@ -35,8 +38,8 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 <template>
     <div class="px-4 py-6">
         <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+            :title="t('settings')"
+            :description="t('manage_profile_settings')"
         />
 
         <div class="flex flex-col lg:flex-row lg:space-x-12">

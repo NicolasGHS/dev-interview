@@ -2,6 +2,9 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import { Form } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 // Components
 import HeadingSmall from '@/components/HeadingSmall.vue';
@@ -26,22 +29,22 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
 <template>
     <div class="space-y-6">
         <HeadingSmall
-            title="Delete account"
-            description="Delete your account and all of its resources"
+            :title="t('delete_account')"
+            :description="t('delete_account_description')"
         />
         <div
             class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10"
         >
             <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
+                <p class="font-medium">{{ t('warning') }}</p>
                 <p class="text-sm">
-                    Please proceed with caution, this cannot be undone.
+                    {{ t('delete_warning') }}
                 </p>
             </div>
             <Dialog>
                 <DialogTrigger as-child>
                     <Button variant="destructive" data-test="delete-user-button"
-                        >Delete account</Button
+                        >{{ t('delete_account') }}</Button
                     >
                 </DialogTrigger>
                 <DialogContent>
@@ -56,29 +59,20 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
                         v-slot="{ errors, processing, reset, clearErrors }"
                     >
                         <DialogHeader class="space-y-3">
-                            <DialogTitle
-                                >Are you sure you want to delete your
-                                account?</DialogTitle
-                            >
+                            <DialogTitle>{{ t('confirm_delete_account') }}</DialogTitle>
                             <DialogDescription>
-                                Once your account is deleted, all of its
-                                resources and data will also be permanently
-                                deleted. Please enter your password to confirm
-                                you would like to permanently delete your
-                                account.
+                                {{ t('delete_account_confirmation') }}
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="grid gap-2">
-                            <Label for="password" class="sr-only"
-                                >Password</Label
-                            >
+                            <Label for="password" class="sr-only">{{ t('password') }}</Label>
                             <Input
                                 id="password"
                                 type="password"
                                 name="password"
                                 ref="passwordInput"
-                                placeholder="Password"
+                                :placeholder="t('password')"
                             />
                             <InputError :message="errors.password" />
                         </div>
@@ -94,7 +88,7 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
                                         }
                                     "
                                 >
-                                    Cancel
+                                    {{ t('cancel') }}
                                 </Button>
                             </DialogClose>
 
@@ -104,7 +98,7 @@ const passwordInput = ref<InstanceType<typeof Input> | null>(null);
                                 :disabled="processing"
                                 data-test="confirm-delete-user-button"
                             >
-                                Delete account
+                                {{ t('delete_account') }}
                             </Button>
                         </DialogFooter>
                     </Form>
