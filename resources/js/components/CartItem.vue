@@ -17,6 +17,8 @@ interface CartItem {
         name: string;
         description: string | null;
         price: string;
+        image_url: string | null;
+        image: string; // Computed accessor for image with fallback
     };
 }
 
@@ -120,7 +122,7 @@ const deleteItem = async () => {
             <!-- Product Image -->
             <div class="flex-shrink-0">
                 <img 
-                    src="/default_boardgame_image.avif" 
+                    :src="props.item.product.image" 
                     :alt="props.item.product.name" 
                     class="w-20 h-20 object-cover rounded-lg"
                 />

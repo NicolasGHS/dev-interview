@@ -41,6 +41,8 @@ export interface Product {
     name: string;
     description: string | null;
     price: string;
+    image_url: string | null;
+    image: string; // Computed accessor for image with fallback
     created_at: string;
     updated_at: string;
 }

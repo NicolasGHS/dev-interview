@@ -100,9 +100,9 @@ onMounted(() => {
         <!-- Product Image -->
         <div class="space-y-4">
           <img 
-            src="/default_boardgame_image.avif" 
+            :src="product.image" 
             :alt="product.name" 
-            class="w-full h-96 object-cover rounded-lg shadow-lg" 
+            class="w-full h-96 object-cover rounded-lg shadow-lg"
           />
         </div>
 

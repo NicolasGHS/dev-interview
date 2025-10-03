@@ -123,7 +123,7 @@ onMounted(() => {
         
         <div class="flex-1 space-y-2">
             <h3 class="font-semibold text-lg">{{ props.product.name }}</h3>
-            <img src="/default_boardgame_image.avif" alt="{{ props.product.name }}" class="w-full h-24 object-cover rounded" />
+            <img :src="props.product.image" :alt="props.product.name" class="w-full h-24 object-cover rounded" />
             <p class="text-sm text-muted-foreground line-clamp-3">
                 {{ props.product.description }} 
             </p>

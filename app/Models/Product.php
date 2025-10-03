@@ -20,6 +20,7 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'image_url',
     ];
 
     /**
@@ -29,6 +30,15 @@ class Product extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'image',
     ];
 
     /**
@@ -45,5 +55,13 @@ class Product extends Model
     public function likedByUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'likes');
+    }
+
+    /**
+     * Get the product image URL with fallback to default
+     */
+    public function getImageAttribute(): string
+    {
+        return $this->image_url ?: '/default_boardgame_image.avif';
     }
 }
