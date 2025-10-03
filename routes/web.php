@@ -43,12 +43,13 @@ Route::post('/api/likes/check', [LikeController::class, 'checkLikes'])->name('ap
 Route::post('/set-locale', function (Illuminate\Http\Request $request) {
     $locale = $request->input('locale');
     $availableLocales = ['en', 'fr', 'nl'];
-    
+
     if (in_array($locale, $availableLocales)) {
         session()->put('locale', $locale);
+
         return response()->json(['success' => true, 'locale' => $locale]);
     }
-    
+
     return response()->json(['success' => false], 422);
 })->name('set.locale');
 

@@ -10,7 +10,8 @@ export default {
     remove_from_favorites: 'Retirer des favoris',
     no_products_found: 'Aucun produit trouvé',
     no_favorites_yet: 'Aucun favori pour le moment',
-    start_exploring: 'Commencez à explorer les produits et ajoutez-les à vos favoris !',
+    start_exploring:
+        'Commencez à explorer les produits et ajoutez-les à vos favoris !',
     showing: 'Affichage de',
     of: 'sur',
     items: 'éléments',
