@@ -109,7 +109,7 @@ onMounted(() => {
         :class="[
             'flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:cursor-pointer flex items-center justify-center gap-2',
             inCart 
-                ? 'bg-green-600 text-white hover:bg-green-700' 
+                ? 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200' 
                 : 'bg-primary text-primary-foreground hover:bg-primary/90'
         ]"
     >
