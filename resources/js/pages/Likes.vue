@@ -56,7 +56,7 @@ onMounted(() => {
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
             
-            <div v-else-if="likedProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div v-else-if="likedProducts.length > 0" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <ProductCard
                     v-for="product in likedProducts"
                     :key="product.id"
