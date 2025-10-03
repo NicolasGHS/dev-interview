@@ -5,6 +5,9 @@ import { ref } from 'vue';
 import { Trash2 } from 'lucide-vue-next';
 import Card from './ui/card/Card.vue';
 import Button from './ui/button/Button.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface CartItem {
     id: number;
@@ -133,7 +136,7 @@ const deleteItem = async () => {
                         :disabled="isUpdating"
                         @click="deleteItem"
                         class="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                        title="Remove from cart"
+                        :title="t('remove_from_cart')"
                     >
                         <Trash2 :size="16" />
                     </Button>
@@ -149,7 +152,7 @@ const deleteItem = async () => {
                         {{ formatPrice(props.item.product.price) }}
                     </span>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-muted-foreground">Quantity:</span>
+                        <span class="text-sm text-muted-foreground">{{ t('quantity') }}:</span>
                         <div class="flex items-center gap-2">
                             <Button
                                 variant="outline"

@@ -3,6 +3,9 @@ import Button from './ui/button/Button.vue';
 import { router } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const isProcessing = ref(false);
 
@@ -50,6 +53,6 @@ const handleCheckout = async () => {
 
 <template>
     <Button @click="handleCheckout" :disabled="isProcessing">
-        {{ isProcessing ? 'Processing...' : 'Checkout' }}
+        {{ isProcessing ? t('processing') : t('checkout') }}
     </Button>
 </template>

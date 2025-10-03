@@ -3,6 +3,9 @@ import Card from './ui/card/Card.vue';
 import { formatPrice } from '@/lib/utils';
 import { computed } from 'vue';
 import CheckoutButton from './CheckoutButton.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface CartItem {
     id: number;
@@ -39,25 +42,25 @@ const formattedTotalPrice = computed(() => {
 <template>
     <Card class="p-4 w-1/3">
         <div class="space-y-4 flex flex-col">
-            <h3 class="text-lg font-semibold">Order Summary</h3>
+            <h3 class="text-lg font-semibold">{{ t('order_summary') }}</h3>
             
             <div v-if="props.items.length > 0" class="space-y-2">
                 <div class="flex justify-between text-sm">
-                    <span class="text-muted-foreground">Items ({{ props.items.reduce((sum, item) => sum + item.quantity, 0) }})</span>
+                    <span class="text-muted-foreground">{{ t('items') }} ({{ props.items.reduce((sum, item) => sum + item.quantity, 0) }})</span>
                     <span>{{ formattedTotalPrice }}</span>
                 </div>
                 
                 <hr class="my-2" />
                 
                 <div class="flex justify-between font-semibold text-lg">
-                    <span>Total</span>
+                    <span>{{ t('total') }}</span>
                     <span class="text-primary">{{ formattedTotalPrice }}</span>
                 </div>
 
             </div>
             
             <div v-else class="text-center text-muted-foreground py-4">
-                <p>No items in cart</p>
+                <p>{{ t('no_items_in_cart') }}</p>
             </div>
             <CheckoutButton />
         </div>

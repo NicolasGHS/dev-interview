@@ -16,6 +16,7 @@ import type { User } from '@/types';
 import { Link, usePage, router } from '@inertiajs/vue3';
 import { Search, ShoppingCart, Heart } from 'lucide-vue-next';
 import { computed, ref, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 interface Props {
     class?: string;
@@ -25,6 +26,7 @@ const props = defineProps<Props>();
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user as User | undefined);
+const { t } = useI18n();
 
 const searchQuery = ref('');
 
@@ -88,7 +90,7 @@ watch(searchQuery, () => {
                 <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                     v-model="searchQuery"
-                    placeholder="Search products..."
+                    :placeholder="t('search_products')"
                     class="pl-10 w-full"
                     @keydown.enter="handleSearch"
                 />

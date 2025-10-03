@@ -3,12 +3,14 @@ import { route } from 'ziggy-js';
 import Button from './ui/button/Button.vue';
 import { usePage } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ShoppingCart, Check } from 'lucide-vue-next';
 
 const props = defineProps(["id"]);
 
 const page = usePage();
 const user = page.props.auth.user;
+const { t } = useI18n();
 const isAdding = ref(false);
 const isChecking = ref(false);
 const inCart = ref(false);
@@ -118,16 +120,16 @@ onMounted(() => {
             :size="20" 
         />
         <span v-if="isChecking">
-            Loading...
+            {{ t('loading') }}
         </span>
         <span v-else-if="isAdding">
-            Adding...
+            {{ t('adding') }}
         </span>
         <span v-else-if="inCart">
-            In Cart ({{ quantity }})
+            {{ t('in_cart') }} ({{ quantity }})
         </span>
         <span v-else>
-            Add to Cart
+            {{ t('add_to_cart') }}
         </span>
     </Button>
 </template>

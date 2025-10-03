@@ -4,6 +4,9 @@ import CartItem from '@/components/CartItem.vue';
 import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 import CartOverview from '@/components/CartOverview.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 // TODO: change any type
 const items = ref<any[]>([]);
@@ -52,9 +55,9 @@ onMounted(() => {
 <template>
     <AppLayout>
         <div class="space-y-6">
-            <h1 class="text-3xl font-bold">Basket</h1>
+            <h1 class="text-3xl font-bold">{{ t('basket') }}</h1>
             <p v-if="cartCount" class="text-muted-foreground">
-                {{ cartCount }} item{{ cartCount !== 1 ? 's' : '' }} in your basket
+                {{ cartCount }} {{ cartCount !== 1 ? t('items') : t('item') }} {{ t('in_your_basket') }}
             </p>
             <div class="flex gap-8 justify-center">
                 <div v-if="items.length > 0" class="space-y-4">
@@ -67,7 +70,7 @@ onMounted(() => {
                     />
                 </div>
                 <div v-else class="text-center py-8">
-                    <p class="text-muted-foreground">Your basket is empty</p>
+                    <p class="text-muted-foreground">{{ t('your_basket_is_empty') }}</p>
                 </div>
                 <CartOverview :items="items" v-if="items.length > 0" />
             </div>
