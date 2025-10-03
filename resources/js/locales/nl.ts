@@ -47,13 +47,16 @@ export default {
     full_name: 'Volledige naam',
     email_address: 'E-mailadres',
     email_unverified: 'Uw e-mailadres is niet geverifieerd.',
-    resend_verification: 'Klik hier om de verificatie-e-mail opnieuw te verzenden.',
-    verification_sent: 'Er is een nieuwe verificatielink naar uw e-mailadres gestuurd.',
+    resend_verification:
+        'Klik hier om de verificatie-e-mail opnieuw te verzenden.',
+    verification_sent:
+        'Er is een nieuwe verificatielink naar uw e-mailadres gestuurd.',
     save: 'Opslaan',
     saved: 'Opgeslagen.',
     password_settings: 'Wachtwoordinstellingen',
     update_password: 'Wachtwoord bijwerken',
-    password_security_note: 'Zorg ervoor dat uw account een lang, willekeurig wachtwoord gebruikt om veilig te blijven',
+    password_security_note:
+        'Zorg ervoor dat uw account een lang, willekeurig wachtwoord gebruikt om veilig te blijven',
     current_password: 'Huidig wachtwoord',
     new_password: 'Nieuw wachtwoord',
     confirm_password: 'Wachtwoord bevestigen',
@@ -65,14 +68,18 @@ export default {
     delete_account: 'Account verwijderen',
     delete_account_description: 'Verwijder uw account en al zijn bronnen',
     warning: 'Waarschuwing',
-    delete_warning: 'Ga voorzichtig te werk, dit kan niet ongedaan worden gemaakt.',
+    delete_warning:
+        'Ga voorzichtig te werk, dit kan niet ongedaan worden gemaakt.',
     confirm_delete_account: 'Weet u zeker dat u uw account wilt verwijderen?',
-    delete_account_confirmation: 'Zodra uw account wordt verwijderd, worden al zijn bronnen en gegevens ook permanent verwijderd. Voer uw wachtwoord in om te bevestigen dat u uw account permanent wilt verwijderen.',
+    delete_account_confirmation:
+        'Zodra uw account wordt verwijderd, worden al zijn bronnen en gegevens ook permanent verwijderd. Voer uw wachtwoord in om te bevestigen dat u uw account permanent wilt verwijderen.',
     cancel: 'Annuleren',
     disabled: 'Uitgeschakeld',
     enabled: 'Ingeschakeld',
-    two_factor_description_disabled: 'Wanneer u tweefactorauthenticatie inschakelt, wordt u gevraagd om een beveiligde pincode tijdens het inloggen. Deze pincode kan worden opgehaald uit een TOTP-ondersteunde applicatie op uw telefoon.',
-    two_factor_description_enabled: 'Met tweefactorauthenticatie ingeschakeld, wordt u gevraagd om een beveiligde, willekeurige pincode tijdens het inloggen, die u kunt ophalen uit de TOTP-ondersteunde applicatie op uw telefoon.',
+    two_factor_description_disabled:
+        'Wanneer u tweefactorauthenticatie inschakelt, wordt u gevraagd om een beveiligde pincode tijdens het inloggen. Deze pincode kan worden opgehaald uit een TOTP-ondersteunde applicatie op uw telefoon.',
+    two_factor_description_enabled:
+        'Met tweefactorauthenticatie ingeschakeld, wordt u gevraagd om een beveiligde, willekeurige pincode tijdens het inloggen, die u kunt ophalen uit de TOTP-ondersteunde applicatie op uw telefoon.',
     continue_setup: 'Setup voortzetten',
     enable_2fa: '2FA inschakelen',
     disable_2fa: '2FA uitschakelen',
